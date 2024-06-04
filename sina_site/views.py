@@ -12,7 +12,7 @@ from django.contrib import messages
 class IndexView(TemplateView):
 
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        return redirect('login')
+        return redirect('tasks')
 
 
 class LoginView(SuccessMessageMixin, LoginView):

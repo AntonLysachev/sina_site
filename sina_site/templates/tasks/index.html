@@ -8,9 +8,9 @@
     <h1 class="my-4">
       {% translate 'Tasks' %}
     </h1>
-<a class="btn btn-primary mb-3" href="{% url 'task_create' %}" role="button">{% translate 'Create task' %}</a>
-<a class="btn btn-primary mb-3" href="{% url 'status_create' %}" role="button">{% translate 'Create status' %}</a>
-<a class="btn btn-primary mb-3" href="{% url 'label_create' %}" role="button">{% translate 'Create label' %}</a>
+<a class="btn btn-success mb-3" href="{% url 'task_create' %}" role="button">{% translate 'Create task' %}</a>
+<a class="btn btn-info mb-3" href="{% url 'status_create' %}" role="button">{% translate 'Create status' %}</a>
+<a class="btn btn-info mb-3" href="{% url 'label_create' %}" role="button">{% translate 'Create label' %}</a>
 <div class="card mb-3">
   <div class="card-body bg-light">
     <form action="{% url 'tasks' %}" class="form-inline center" method="get">
