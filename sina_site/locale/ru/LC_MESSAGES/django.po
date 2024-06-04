@@ -272,3 +272,9 @@ msgstr "Полный отзыв"
 
 msgid "Only grade"
 msgstr "Только оценка"
+
+msgid "Customers"
+msgstr "Клиенты"
+
+msgid "Birthday"
+msgstr "День рождения"

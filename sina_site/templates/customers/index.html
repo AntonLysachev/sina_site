@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate 'Customers' %}{% endblock %}
+
+
+{% block content %}
+<div class="container wrapper flex-grow-1">
+    <h1 class="my-4">
+{% translate 'Customers' %}
+    </h1>
+<table class="table table-striped">
+<thead>
+  <tr>
+    <th>ID</th>
+    <th>{% translate 'Name' %}</th>
+    <th>{% translate 'Phone' %}</th>
+    <th>{% translate 'Birthday' %}</th>
+    <th>{% translate 'Date of creation' %}</th>
+    <th></th>
+  </tr>
+</thead>
+<tbody>
+    {% if customers %}
+    {% for customer in customers %}
+    <tr>
+      <td>{{ customer.id }}</td>
+      <td>{{ customer.firstname }} {{ customer.lastname }}</td>
+      <td>{{ customer.phone }}</td>
+      <td>{{ customer.birthday }}</td>
+      <td>{{ customer.created_at|date:"d.m.Y H:i" }}</td>
+    </tr>
+    {% endfor %}
+    {% endif %}
+  
+</tbody>
+</table>
+
+  </div>
+{% endblock %}
