@@ -1,0 +1,48 @@
+{% extends 'bootstrap.html' %}
+{% load i18n django_bootstrap5 %}
+
+{% block bootstrap5_content %}
+    <nav class="navbar navbar-expand-lg navbar-light bg-light ms-3">
+        <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarToggleExternalContent">
+          <ul class="navbar-nav">
+          {% if user.is_authenticated %}
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {% translate 'Tasks' %}
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="/tasks/">{% translate 'Task list' %}</a></li>
+                <li><a class="dropdown-item" href="/statuses/">{% translate 'Statuses list' %}</a></li>
+                <li><a class="dropdown-item" href="/labels/">{% translate 'Labels list' %}</a></li>
+              </ul>
+            </li>
+            {% if user.is_superuser %}
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {% translate 'Users' %}
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="/users/">{% translate 'Users list' %}</a></li>
+                <li><a class="dropdown-item" href="/users/create/">{% translate 'Registration of new users' %}</a></li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/reviews/">{% translate 'Reviews' %}</a>
+            </li>
+            {% endif %}
+            <form action="/logout/" method="post">
+              {% csrf_token %}
+              <input class="btn nav-link" type="submit" value="{% translate 'Logout' %}">
+            </form>
+          </ul>
+          {% endif %}
+        </div>
+      </nav>
+
+      {% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
+
+      {% block content %}(no content){% endblock %}
+{% endblock %}

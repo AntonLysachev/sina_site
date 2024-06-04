@@ -1,0 +1,22 @@
+{
+    "usertest":{
+        "first_name": "Test",
+        "last_name": "User",
+        "username": "testuser",
+        "password1": "testpass",
+        "password2": "testpass"
+    },
+    "userforlogin":{
+        "username": "UserTest",
+        "password": "123"
+    },
+    "task":{
+        "name": "Test"
+    },
+    "status":{
+        "name": "Test"
+    },
+    "label":{
+        "name": "Test"
+    }
+}

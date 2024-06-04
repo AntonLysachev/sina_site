@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load i18n django_bootstrap5 %}
+
+{% block title %}{% translate 'Tasks' %}{% endblock %}
+
+{% block content %}
+<div class="container wrapper flex-grow-1">
+    <h1 class="my-4">
+      {% translate 'Tasks' %}
+    </h1>
+<a class="btn btn-primary mb-3" href="{% url 'task_create' %}" role="button">{% translate 'Create task' %}</a>
+<a class="btn btn-primary mb-3" href="{% url 'status_create' %}" role="button">{% translate 'Create status' %}</a>
+<a class="btn btn-primary mb-3" href="{% url 'label_create' %}" role="button">{% translate 'Create label' %}</a>
+<div class="card mb-3">
+  <div class="card-body bg-light">
+    <form action="{% url 'tasks' %}" class="form-inline center" method="get">
+      {% csrf_token %}
+      {% bootstrap_form form %}
+    <input class="btn btn-primary" type="submit" value="Показать">
+    </form>
+  </div>
+</div>
+
+
+<table class="table table-striped">
+<thead>
+  <tr>
+    <th>ID</th>
+    <th>{% translate 'Name' %}</th>
+    <th>{% translate 'Status' %}</th>
+    <th>{% translate 'Autor' %}</th>
+    <th>{% translate 'Executor' %}</th>
+    <th>{% translate 'Date of creation' %}</th>
+    <th></th>
+  </tr>
+</thead>
+<tbody>
+  {% for task in tasks %}
+    <tr>
+      <td>{{ task.id }}</td>
+      <td>
+        <a href="/tasks/{{ task.id }}/">{{ task.name }}</a>
+      </td>
+      <td>
+        {{ task.status.name }}
+      </td>
+      <td>{{ task.autor.first_name }} {{ task.autor.last_name }}</td>
+      <td>
+        {{ task.executor.first_name }} {{ task.executor.last_name }}
+      </td>
+      <td>{{ task.created_at|date:"d.m.Y H:i" }}</td>
+      <td>
+        <a href="{% url 'task_update' pk=task.id %}">{% translate 'Update' %}</a>
+        <br>
+        <a href="{% url 'task_delete' pk=task.id %}">{% translate 'Delete' %}</a>
+      </td>
+    </tr>
+    {% endfor %}
+</tbody>
+</table>
+
+  </div>
+{% endblock %}

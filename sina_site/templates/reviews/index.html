@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load i18n django_bootstrap5 %}
+
+{% block title %}{% translate 'Reviews' %}{% endblock %}
+
+
+{% block content %}
+<div class="container wrapper flex-grow-1">
+    <h1 class="my-4">
+{% translate 'Reviews' %}
+    </h1>
+    <form method="get">
+      {% bootstrap_form form %}
+      <button class="btn btn-primary" type="submit">{% translate 'Filter' %}</button>
+  </form>
+<table class="table table-striped">
+<thead>
+  <tr>
+    <th>ID</th>
+    <th>{% translate 'Review' %}</th>
+    <th>{% translate 'Grade' %}</th>
+    <th>{% translate 'Name' %}</th>
+    <th>{% translate 'Phone' %}</th>
+    <th>{% translate 'Date of creation' %}</th>
+    <th></th>
+  </tr>
+</thead>
+<tbody>
+    {% if reviews %}
+    {% for review in reviews %}
+    <tr>
+      <td>{{ review.id }}</td>
+      <td>{{ review.review }}</td>
+      <td>{{ review.grade }}</td>
+      <td>{{ review.customer.firstname }} {{ review.customer.lastname }}</td>
+      <td>{{ review.customer.phone }}</td>
+      <td>{{ review.created_at|date:"d.m.Y H:i" }}</td>
+    </tr>
+    {% endfor %}
+    {% endif %}
+  
+</tbody>
+</table>
+
+  </div>
+{% endblock %}

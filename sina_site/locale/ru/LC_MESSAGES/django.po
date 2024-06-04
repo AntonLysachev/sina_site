@@ -1,0 +1,274 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-04-03 10:24+0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
+
+
+msgid "Create label"
+msgstr "Создать метку"
+
+msgid "Deleting a label"
+msgstr "Удаление метка"
+
+msgid "Update label"
+msgstr "Изменение метки"
+
+msgid "Task manager"
+msgstr "Менеджер задач"
+
+msgid "Users"
+msgstr "Пользователи"
+
+msgid "Autor"
+msgstr "Автор"
+
+msgid "Sign in"
+msgstr "Вход"
+
+msgid "Login"
+msgstr "Войти"
+
+msgid "Logout"
+msgstr "Выход"
+
+msgid "Sign up"
+msgstr "Регистрация"
+
+msgid "Register"
+msgstr "Зарегистрировать"
+
+msgid "You are logged in"
+msgstr "Вы залогинены"
+
+msgid "You are logged out"
+msgstr "Вы разлогинены"
+
+msgid "Password"
+msgstr "Пароль"
+
+msgid "Password confirmation"
+msgstr "Подтверждение пароля"
+
+msgid "User name"
+msgstr "Имя пользователя"
+
+msgid "Name"
+msgstr "Имя"
+
+msgid "Last name"
+msgstr "Фамилия"
+
+msgid "Full name"
+msgstr "Полное имя"
+
+msgid "Date of creation"
+msgstr "Дата создания"
+
+msgid "Update"
+msgstr "Изменить"
+
+msgid "Create"
+msgstr "Создать"
+
+msgid "Executor"
+msgstr "Исполнитель"
+
+msgid "Change user"
+msgstr "Изменение пользователя"
+
+msgid "Status"
+msgstr "Статус"
+
+msgid "Create status"
+msgstr "Создать статус"
+
+msgid "Create task"
+msgstr "Создать задачу"
+
+msgid "Update status"
+msgstr "Изменение статуса"
+
+msgid "Update task"
+msgstr "Изменение задачи"
+
+msgid "Delete"
+msgstr "Удалить"
+
+msgid "Deleting a status"
+msgstr "Удаление статуса"
+
+msgid "Statuses"
+msgstr "Статусы"
+
+msgid "Labels"
+msgstr "Метки"
+
+msgid "Label"
+msgstr "Метка"
+
+msgid "Tasks"
+msgstr "Задачи"
+
+msgid "Task"
+msgstr "Задача"
+
+msgid "Description"
+msgstr "Описание"
+
+msgid "Please enter the correct username and password. Both fields can be case sensitive"
+msgstr "Пожалуйста, введите правильные имя пользователя и пароль. Оба поля могут быть чувствительны к регистру"
+
+msgid "Obligatory field. No more than 150 characters. Only letters, numbers and symbols"
+msgstr "Обязательное поле. Не более 150 символов. Только буквы, цифры и символы"
+
+msgid "Your password must contain at least 3 characters"
+msgstr "Ваш пароль должен содержать как минимум 3 символа"
+
+msgid "To confirm, please enter your password again"
+msgstr "Для подтверждения введите, пожалуйста, пароль ещё раз"
+
+msgid "A user with the same name already exists"
+msgstr "Пользователь с таким именем уже существует"
+
+msgid "The entered passwords do not match"
+msgstr "Введенные пароли не совпадают"
+
+msgid "User successfully registered"
+msgstr "Пользователь успешно зарегистрирован"
+
+msgid "User successfully changed"
+msgstr "Пользователь успешно изменен"
+
+msgid "User successfully deleted"
+msgstr "Пользователь успешно удален"
+
+msgid "Task successfully deleted"
+msgstr "Задача успешно удалена"
+
+msgid "Deleting a user"
+msgstr "Удаление пользователя"
+
+msgid "Are you sure you want to delete"
+msgstr "Вы уверены, что хотите удалить"
+
+msgid "Yes, delete"
+msgstr "Да, удалить"
+
+msgid "You do not have permission to change another user"
+msgstr "У вас нет прав для изменения другого пользователя"
+
+msgid "A task status with the same name already exists"
+msgstr "Статус задачи с таким именем уже существует"
+
+msgid "Status successfully created"
+msgstr "Статус успешно создан"
+
+msgid "Status changed successfully"
+msgstr "Статус успешно изменен"
+
+msgid "Status deleted successfully"
+msgstr "Статус успешно удален"
+
+msgid "You are not authorized! Please log in"
+msgstr "Вы не авторизованы! Пожалуйста, выполните вход"
+
+msgid "Cannot delete status because it is in use"
+msgstr "Невозможно удалить статус, потому что он используется"
+
+msgid "Only self tasks"
+msgstr "Только свои задачи"
+
+msgid "Only its author can delete a task"
+msgstr "Задачу может удалить только ее автор"
+
+msgid "Deleting a task"
+msgstr "Удаление задачи"
+
+msgid "The task was successfully modified"
+msgstr "Задача успешно изменена"
+
+msgid "Task created successfully"
+msgstr "Задача успешно создана"
+
+msgid "Task with the same Name already exists"
+msgstr "Задача с таким именем уже существует"
+
+msgid "Cannot delete label because it is in use"
+msgstr "Невозможно удалить метку, потому что она используется"
+
+msgid "Label deleted successfully"
+msgstr "Метка успешно удалена"
+
+msgid "Label changed successfully"
+msgstr "Метка успешно изменена"
+
+msgid "Label successfully created"
+msgstr "Метка успешно создана"
+
+msgid "A label with the same name already exists"
+msgstr "Метка с таким именем уже существует"
+
+msgid "Cannot delete user because they have associated tasks"
+msgstr "Невозможно удалить пользователя, потому что он используется"
+
+msgid "Task Manager"
+msgstr "Менеджер задач"
+
+msgid "Hello from Hexlet!"
+msgstr "Привет от Хекслета!"
+
+msgid "Practical programming courses"
+msgstr "Практические курсы по программированию"
+
+msgid "To learn more"
+msgstr "Узнать больше"
+
+msgid "Registration of new users"
+msgstr "Регистрация новых пользователей"
+
+msgid "Task list"
+msgstr "Список задач"
+
+msgid "Statuses list"
+msgstr "Список статусов"
+
+msgid "Labels list"
+msgstr "Список меток"
+
+msgid "Users list"
+msgstr "Список пользователей"
+
+msgid "Reviews"
+msgstr "Отзывы"
+
+msgid "Review"
+msgstr "Отзыв"
+
+msgid "Phone"
+msgstr "Телефон"
+
+msgid "Grade"
+msgstr "Оценка"
+
+msgid "Full review"
+msgstr "Полный отзыв"
+
+msgid "Only grade"
+msgstr "Только оценка"
