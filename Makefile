@@ -1,6 +1,6 @@
 MANAGE := poetry run python manage.py
 
-setup: install makemigrations migrate
+setup: install makemigrations migrate createsuperuser
 
 install:
 	poetry install
@@ -10,6 +10,9 @@ makemigrations:
 
 migrate:
 	@$(MANAGE) migrate
+
+createsuperuser:
+	echo "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.filter(username='$(USERNAME_SUPERUSER)').exists() or User.objects.create_superuser('$(USERNAME_SUPERUSER)', 'admin@example.com', '$(PASSWORD_SUPERUSER)')" | $(MANAGE) shell
 
 dev:
 	python manage.py runserver
