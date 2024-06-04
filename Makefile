@@ -16,16 +16,16 @@ dev:
 
 PORT ?= 8000
 start:
-	poetry run gunicorn -w 5 -b 0.0.0.0:$(PORT) task_manager.wsgi:application
+	poetry run gunicorn -w 5 -b 0.0.0.0:$(PORT) sina_site.wsgi:application
 
 lint:
-	poetry run flake8 task_manager
+	poetry run flake8 sina_site
 
 test:
 	@$(MANAGE) test
 
 test-coverage:
-	poetry run pytest --cov=task_manager --cov-report xml
+	poetry run pytest --cov=sina_site --cov-report xml
 
 compil:
 	python manage.py compilemessages
