@@ -54,4 +54,3 @@ class StatusViewTest(TestCase):
         response = self.client.post(reverse('status_delete', args=[status.id]), follow=True)
         self.assertContains(response, _('Status deleted successfully'))
         self.assertFalse(Status.objects.filter(id=status.id).exists())
-

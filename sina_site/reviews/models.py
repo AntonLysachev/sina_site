@@ -1,6 +1,7 @@
 from django.db import models
 from sina_site.customers.models import Customer
 
+
 class Review(models.Model):
     review = models.TextField(blank=True, null=True)
     grade = models.IntegerField()
