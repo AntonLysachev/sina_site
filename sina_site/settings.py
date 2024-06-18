@@ -49,7 +49,9 @@ INSTALLED_APPS = [
     "sina_site.statuses",
     "sina_site.labels",
     "sina_site.reviews",
-    "sina_site.customers"
+    "sina_site.customers",
+    "sina_site.analytics",
+    "sina_site.shift_schedule",
 ]
 
 MIDDLEWARE = [

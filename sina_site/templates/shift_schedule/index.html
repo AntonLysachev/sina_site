@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate 'Task Manager' %}{% endblock %}
+
+{% block content %}
+<form action="{% url 'shift_schedule' %}" method="post">
+  {% csrf_token %}
+  <table class="table table-bordered" style="margin-left: 10px;">
+    <thead>
+      <tr>
+        <th scope="col">Имя</th>
+        <th scope="col">Понедельник</th>
+        <th scope="col">Вторник</th>
+        <th scope="col">Среда</th>
+        <th scope="col">Четверг</th>
+        <th scope="col">Пятница</th>
+        <th scope="col">Суббота</th>
+        <th scope="col">Воскресенье</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        {% for user in users %}
+        <th>{{ user.first_name }} {{user.last_name }}</th>
+        {% for _ in week %}
+        <td>
+          <div class="col">
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" id="shift1">
+              <label class="form-check-label" for="shift1">Смена 1</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" id="shift2">
+              <label class="form-check-label" for="shift2">Смена 2</label>
+            </div>
+          </div>
+        </td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div>
+    <h3 style="margin: 10px;">
+      Период
+    </h3>
+  </div>
+  <div class="row" style="max-width: 50%; margin-left: 0; margin-top: 20px;">
+    <div class="col-2">
+      <select name="month" class="form-control">
+        <option selected style="text-align: center;">Месяц</option>
+        <option value="1" style="text-align: center;">Январь</option>
+        <option value="2" style="text-align: center;">Февраль</option>
+        <option value="3" style="text-align: center;">Март</option>
+        <option value="4" style="text-align: center;">Апрель</option>
+        <option value="5" style="text-align: center;">Май</option>
+        <option value="6" style="text-align: center;">Июнь</option>
+        <option value="7" style="text-align: center;">Июль</option>
+        <option value="8" style="text-align: center;">Август</option>
+        <option value="9" style="text-align: center;">Сентябрь</option>
+        <option value="10" style="text-align: center;">Октябрь</option>
+        <option value="11" style="text-align: center;">Ноябрь</option>
+        <option value="12" style="text-align: center;">Декабрь</option>
+      </select>
+    </div>
+    <div class="col-1">
+      <div class="form-group row">
+        <label for="from-select" class="col-sm-4 col-form-label">С</label>
+        <div class="col-sm-8">
+          <select name="from-date" id="from-select" class="form-control" style="width: auto;">
+            {% for i in days %}
+            <option value="{{ i }}" style="text-align: center;">{{ i }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="col-1">
+      <div class="form-group row">
+        <label for="to-select" class="col-sm-4 col-form-label">До</label>
+        <div class="col-sm-8">
+          <select name="to-date" id="to-select" class="form-control" style="width: auto;">
+            {% for i in days %}
+            <option value="{{ i }}" style="text-align: center;">{{ i }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary" style="margin-top: 20px; margin-left: 10px;">Сохранить</button>
+</form>
+{% endblock %}

@@ -29,5 +29,7 @@ urlpatterns = [
     path('login/', views.LoginView.as_view(), name='login'),
     path('logout/', views.LogoutView.as_view(), name='logout'),
     path("reviews/", include('sina_site.reviews.urls')),
-    path("customers/", include('sina_site.customers.urls'))
+    path("customers/", include('sina_site.customers.urls')),
+    path("shift_schedule/", include('sina_site.shift_schedule.urls')),
+    path("analytics/", include('sina_site.analytics.urls')),
 ]
