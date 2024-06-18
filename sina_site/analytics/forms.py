@@ -1,10 +1,7 @@
 from django.forms import Form
 from django import forms
 import calendar
-import locale
 import datetime
-
-locale.setlocale(locale.LC_ALL, 'ru_RU')
 
 MONTH_CHOICES = tuple((str(i), month) for i, month in enumerate(calendar.month_name) if month)
 
