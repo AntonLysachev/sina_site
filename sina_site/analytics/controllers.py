@@ -43,9 +43,10 @@ class API():
                 'page': page
             }
             response = self.get_json_request('transactions.getTransactions', 'many', **params)
+
+            yield response['data']
             count = response['page']['count']
             page += 1
-            yield response['data']
 
 
 class Pump():
