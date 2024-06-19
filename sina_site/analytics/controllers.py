@@ -67,7 +67,7 @@ class Pump():
         for data in api.get_transactions(self.date_from, now):
             all_data.extend(data)
 
-        return all_data
+        return all_data[::-1]
 
     def synchronization_db(self):
          
