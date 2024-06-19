@@ -19,7 +19,7 @@ dev:
 
 PORT ?= 8000
 start:
-	poetry run gunicorn -w 5 -b 0.0.0.0:$(PORT) --timeout 60 sina_site.wsgi:application
+	poetry run gunicorn -w 5 -b 0.0.0.0:$(PORT) --timeout 120 sina_site.wsgi:application
 
 lint:
 	poetry run flake8 sina_site
