@@ -66,8 +66,8 @@ class Pump():
 
         for data in api.get_transactions(self.date_from, now):
             all_data.extend(data)
-            
-        all_data.sort(key=lambda x: x['transaction_id'])
+
+        all_data.sort(key=lambda x: x['date_close'])
         return all_data
 
     def synchronization_db(self):
