@@ -72,7 +72,7 @@ class Pump():
         return all_data
 
     def synchronization_db(self):
-         
+
          transactions = self.pull_transaction()
 
          for transaction in transactions:
@@ -95,12 +95,12 @@ class Pump():
                     product_sum = product['product_sum']
                     payed_sum = product['payed_sum']
                     try:
-                        product = Product.objects.create(product_id=product_id, type=type, product_sum=product_sum, payed_sum=payed_sum)
-                        transaction.product_id.add(product)
-                        transaction.save()
+                        product_obj = Product.objects.create(product_id=product_id, type=type, product_sum=product_sum, payed_sum=payed_sum)
+
                     except:
-                        product = Product.objects.get(product_id=product_id)
-                        transaction.product_id.add(product)
+                        product_obj = Product.objects.get(product_id=product_id)
+                    finally:
+                        transaction.product_id.add(product_obj)
                         transaction.save()
             except:
                 continue
@@ -113,36 +113,39 @@ class Analytics():
         self.date_to = pd.to_datetime(datetime.now(), utc=True)
         self.returning_clients_stats = []
     
+    def calculate_date_range(self, dataframe, delta, **sample_per) -> tuple:
+            
+        start_date = dataframe['date_close'].min().to_period('W').to_timestamp().replace(hour=7, minute=30)
+        if 'months' in sample_per:
+            start_date = dataframe['date_close'].min().to_period('M').to_timestamp().replace(hour=7, minute=30)
+        if 'years' in sample_per:
+            start_date = dataframe['date_close'].min().to_period('Y').to_timestamp().replace(hour=7, minute=30)
+        start_date = pd.to_datetime(start_date).tz_localize('UTC')
+        common_date = start_date + delta
+        end_date = common_date + delta
+        return start_date, common_date, end_date
+
     def get_returnability(self, date_from: datetime = None, date_to: datetime = None, **sample_per):
 
         if date_from:
             self.date_from = pd.to_datetime(date_from, utc=True)
         if date_to:
             self.date_to = pd.to_datetime(date_to, utc=True)
+        delta = relativedelta(**sample_per)
 
         transactions = Transaction.objects.filter(date_close__range=(self.date_from, self.date_to)).values()
         if transactions:
-            df = pd.DataFrame.from_records(transactions)
-            df = df.loc[df['client_id'] != 0]
-
-            delta = relativedelta(**sample_per)
-
-            start_date = df['date_close'].min().to_period('W').to_timestamp().replace(hour=7, minute=30)
-            if 'months' in sample_per:
-                start_date = df['date_close'].min().to_period('M').to_timestamp().replace(hour=7, minute=30)
-            if 'years' in sample_per:
-                start_date = df['date_close'].min().to_period('Y').to_timestamp().replace(hour=7, minute=30)
-            start_date = pd.to_datetime(start_date).tz_localize('UTC')
-            common_date = start_date + delta
-            end_date = common_date + delta
-
+            all_transactions = pd.DataFrame.from_records(transactions)
+            registered_clients = all_transactions.loc[all_transactions['client_id'] != 0]
+            start_date, common_date, end_date = self.calculate_date_range(registered_clients, delta, **sample_per)
 
             while self.date_to > (end_date - delta):
-                before_period = df.loc[df['date_close'].between(start_date, common_date)]
+                before_period = registered_clients.loc[registered_clients['date_close'].between(start_date, common_date)]
                 cleane_before_period = before_period.drop_duplicates(subset='client_id')
 
-                period = df.loc[df['date_close'].between(common_date, end_date)]
+                period = registered_clients.loc[registered_clients['date_close'].between(common_date, end_date)]
                 clean_period = period.drop_duplicates(subset='client_id')
+                transactions_period = len(all_transactions.loc[all_transactions['date_close'].between(common_date, end_date)])
 
                 returned = len(pd.merge(cleane_before_period, clean_period, on='client_id'))
                 one_hundred_percent = len(cleane_before_period)
@@ -153,6 +156,7 @@ class Analytics():
 
                 self.returning_clients_stats.append({
                     'count': returnability,
+                    'transactions': transactions_period,
                     'date_from': common_date.date(),
                     'date_to': end_date.date(),
                 })
@@ -160,6 +164,5 @@ class Analytics():
                 start_date += delta
                 common_date += delta
                 end_date += delta
-
 
         return self.returning_clients_stats

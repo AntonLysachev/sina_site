@@ -5,98 +5,116 @@
 
 
 {% block content %}
-<link rel="stylesheet" href="https://bootstraptema.ru/plugins/2015/bootstrap3/bootstrap.min.css" />
+
 <link type="text/css" rel="StyleSheet" href="https://bootstraptema.ru/plugins/2016/shieldui/style.css" />
 <script src="https://bootstraptema.ru/plugins/jquery/jquery-1.11.3.min.js"></script>
 <script src="https://bootstraptema.ru/plugins/2016/shieldui/script.js"></script>
 
 <br><br><br>
-
+<div style="display: flex; justify-content: center;">
 <div class="container">
 <div class="row">
-<div class="col-md-8 col-md-offset-2">
-
-<!-- График --><div id="chart">
-
-<script>
- $(document).ready(function () {
- var percents = {{ data_for_chart.data|safe }};
- var periods = {{ data_for_chart.periods|safe }};
- $("#chart").shieldChart({
- theme: "light",
- primaryHeader: {
- text: "Возвращаемость клиентов"
- },
- exportOptions: {
- image: false,
- print: false
- },
- axisX: {
- categoricalValues: periods
- },
- tooltipSettings: {
- chartBound: true,
- axisMarkers: {
- enabled: true,
- mode: 'xy'
- } 
- },
- dataSeries: [{
- seriesType: 'line',
- collectionAlias: "Возвращаемость в процентах",
- data: percents 
- }]
- });
- });
- </script><!-- /.График -->
-
-</div><!-- /.col-md-8 col-md-offset-2 -->
-</div><!-- /.row -->
-</div><!-- /.container -->
-
-<form action="{% url 'analytics' %}" method="get">
-    {% csrf_token %}
-    <div class="row">
-        <div class="col-auto">
-            <label>{{ form.period.label }}</label>
-        </div>
-        <div class="col-auto"> 
-            {{ form.period }}
-        </div>
-        <div class="col-auto">
-            <label>{{ form.date_from.label }}</label>
-            {{ form.date_from }}
-        </div>
-        <div class="col-auto">
-            <label>{{ form.date_to.label }}</label>
-            {{ form.date_to }}
-        </div>
-        <div class="col-auto">
-            <input name="Get" class="btn btn-primary" type="submit" value="Получить">
-        </div>
+<div class="col-md-8">
+    <script>
+        $(function () {
+            var percents = {{ data_for_chart.percents|safe }};
+            var periods = {{ data_for_chart.periods|safe }};
+            var transactions = {{ data_for_chart.count_transactions|safe }};
+        $("#chart").shieldChart({
+        theme: "light",
+        exportOptions: {
+        image: false,
+        print: false
+        },
+        axisX: {
+        categoricalValues: periods
+        },
+        axisY: {
+        title: {
+        text: "Процент"
+        }
+        },
+        tooltipSettings: {
+        chartBound: true
+        },
+        seriesSettings: {
+        line: {
+        enablePointSelection: true,
+        pointMark: {
+        activeSettings: {
+        pointSelectedState: {
+        drawWidth: 4,
+        drawRadius: 4
+        }
+        }
+        }
+        }
+        },
+        primaryHeader: {
+        text: "Возвращаимость клиентов"
+        },
+        dataSeries: [{
+        seriesType: 'line',
+        collectionAlias: 'Процент вернувшихся клиентов',
+        data: percents
+        }, {
+        seriesType: 'line',
+        collectionAlias: 'Колличество продаж',
+        data: transactions
+        }]
+        });
+        });
+        </script>
+        <div id="chart"></div>
+        <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Начало периода</th>
+                <th>Конец периода</th>
+                <th>Процент вернувшихся</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for period in returnability %}
+                <tr>
+                    <td>{{ period.date_from }}</td>
+                    <td>{{ period.date_to }}</td>
+                    <td>{{ period.count }}%</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-</form>
-<table class="table table-striped">
-    <thead>
-      <tr>
-        <th>С</th>
-        <th>По</th>
-        <th>Процент вернувшихся</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-        {% for period in returnability %}
-        <tr>
-            <td>{{ period.date_from }}</td>
-            <td>{{ period.date_to }}</td>
-            <td>{{ period.count }}%</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-<form action="{% url 'analytics' %}" method="post">
-{% csrf_token %}
-    <input name="Update" class="btn btn-primary" type="submit" value="Обновить">
-</form>
+    <div class="col-md-4">
+    <form action="{% url 'analytics' %}" method="get">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-auto">
+                <label>{{ form.period.label }}</label>
+                {{ form.period }}
+            </div>
+            <div class="col-auto">
+                <label>{{ form.date_from.label }}</label>
+                {{ form.date_from }}
+            </div>
+            <div class="col-auto">
+                <label>{{ form.date_to.label }}</label>
+                {{ form.date_to }}
+            </div>
+            <div class="col-auto">
+                <input name="Get" class="btn btn-primary" type="submit" value="Получить">
+            </div>
+            <div class="col-auto">
+            </div>
+        </div>
+    </form>
+    <form action="{% url 'analytics' %}" method="post">
+        {% csrf_token %}
+        <input name="Update" class="btn btn-primary" type="submit" value="Обновить">
+    </form>
+</div>
+</div>
+</div>
+</div>
 {% endblock %}

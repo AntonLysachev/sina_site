@@ -1,7 +1,7 @@
 from django.forms import Form
 from django import forms
 import calendar
-import datetime
+from datetime import date, timedelta
 
 MONTH_CHOICES = tuple((str(i), month) for i, month in enumerate(calendar.month_name) if month)
 
@@ -12,7 +12,8 @@ PERIOD_CHOICES = (
 )
 
 class PeriodFilterForm(Form):
-    current_year = datetime.date.today().year
+    today = date.today()
+    current_year = today.year
     years = range(2000, current_year+1)
 
     period = forms.ChoiceField(choices=PERIOD_CHOICES,
