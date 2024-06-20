@@ -16,63 +16,74 @@
 <div class="row">
 <div class="col-md-8">
     <script>
-        $(function () {
-            var percents = {{ data_for_chart.percents|safe }};
-            var periods = {{ data_for_chart.periods|safe }};
-            var transactions = {{ data_for_chart.count_transactions|safe }};
+        $(document).ready(function () {
+           var percents = {{ data_for_chart.percents|safe }};
+           var periods = {{ data_for_chart.periods|safe }};
+           var transactions = {{ data_for_chart.count_transactions|safe }};
         $("#chart").shieldChart({
-        theme: "light",
+        theme: "bootstrap",
+        primaryHeader: {
+        text: "Возвращаимость клиентов"
+        },
         exportOptions: {
         image: false,
         print: false
         },
         axisX: {
-        categoricalValues: periods
-        },
-        axisY: {
+           categoricalValues: periods
+       },
+        axisY: [
+        {
         title: {
-        text: "Процент"
+        text: 'Процент',
+        style: {
+        color: "#52B0F0"
         }
         },
-        tooltipSettings: {
-        chartBound: true
-        },
-        seriesSettings: {
-        line: {
-        enablePointSelection: true,
-        pointMark: {
-        activeSettings: {
-        pointSelectedState: {
-        drawWidth: 4,
-        drawRadius: 4
+        swapLocation: false,
+        axisTickText: {
+        style: {
+        color: "#52B0F0"
         }
         }
-        }
+        }, {
+        title: {
+        text: 'Продажи',
+        style: {
+        color: "#D7C43A"
         }
         },
-        primaryHeader: {
-        text: "Возвращаимость клиентов"
-        },
+        swapLocation: true,
+        axisTickText: {
+        style: {
+        color: "#D7C43A"
+        }
+        }
+        }],
         dataSeries: [{
-        seriesType: 'line',
+        axisY: 0,
+        seriesType: "area",
         collectionAlias: 'Процент вернувшихся клиентов',
         data: percents
-        }, {
-        seriesType: 'line',
+        },
+        {
+        axisY: 1,
+        seriesType: "area",
         collectionAlias: 'Колличество продаж',
         data: transactions
-        }]
+        }
+        ]
         });
         });
         </script>
-        <div id="chart"></div>
+               <div id="chart"></div>
         <table class="table table-striped">
             <thead>
               <tr>
                 <th>Начало периода</th>
                 <th>Конец периода</th>
                 <th>Процент вернувшихся</th>
-                <th></th>
+                <th>Колличество продаж</th>
               </tr>
             </thead>
             <tbody>
@@ -81,6 +92,7 @@
                     <td>{{ period.date_from }}</td>
                     <td>{{ period.date_to }}</td>
                     <td>{{ period.count }}%</td>
+                    <td>{{ period.transactions }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -118,3 +130,6 @@
 </div>
 </div>
 {% endblock %}
+
+
+ 
