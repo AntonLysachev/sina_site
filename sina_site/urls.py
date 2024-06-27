@@ -21,7 +21,7 @@ from sina_site import views
 
 urlpatterns = [
     path("", views.IndexView.as_view(), name="index"),
-    path("users/", include('sina_site.users.urls')),
+    path("staff/", include('sina_site.staff.urls')),
     path("statuses/", include('sina_site.statuses.urls')),
     path("tasks/", include('sina_site.tasks.urls')),
     path("labels/", include('sina_site.labels.urls')),

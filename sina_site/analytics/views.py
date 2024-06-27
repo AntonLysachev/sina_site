@@ -32,7 +32,7 @@ class AnalyticsIndexView(TemplateView):
                 period = {'years': 1}
 
             returnability = analytic.get_returnability(date_from=date_from, date_to=date_to, **period)
-            percents = list(map(lambda x: x['count'], returnability))
+            percents = list(map(lambda x: x['percent'], returnability))
             periods = list(map(lambda x: f"{x['date_from']}-{x['date_to']}", returnability))
             count_transactions = list(map(lambda x: x['transactions'], returnability))
 

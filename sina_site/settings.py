@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     'django_bootstrap5',
     "sina_site",
-    "sina_site.users",
+    "sina_site.staff",
     "sina_site.tasks",
     "sina_site.statuses",
     "sina_site.labels",

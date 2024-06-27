@@ -31,4 +31,4 @@ test-coverage:
 	poetry run pytest --cov=sina_site --cov-report xml
 
 compil:
-	python manage.py compilemessages
+	python manage.py compilemessages --locale ru

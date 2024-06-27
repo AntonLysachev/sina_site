@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 from .models import Transaction, Product
 from sina_site.customers.models import Customer
 import pandas as pd
+from pandas import DataFrame
 
 load_dotenv()
 
@@ -113,7 +114,7 @@ class Analytics():
         self.date_to = pd.to_datetime(datetime.now(), utc=True)
         self.returning_clients_stats = []
     
-    def calculate_date_range(self, dataframe, delta, **sample_per) -> tuple:
+    def calculate_date_range(self, dataframe: DataFrame, delta: relativedelta, **sample_per) -> tuple:
             
         start_date = dataframe['date_close'].min().to_period('W').to_timestamp().replace(hour=7, minute=30)
         if 'months' in sample_per:
@@ -155,7 +156,7 @@ class Analytics():
                     returnability = round((returned / one_hundred_percent) * 100, 2)
 
                 self.returning_clients_stats.append({
-                    'count': returnability,
+                    'percent': returnability,
                     'transactions': transactions_period,
                     'date_from': common_date.date(),
                     'date_to': end_date.date(),

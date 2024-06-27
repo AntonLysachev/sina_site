@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% load i18n django_bootstrap5 %}
+
+{% block title %}{% translate 'Schedules shifts' %}{% endblock %}
+
+{% block content %}
+{% bootstrap_form form %}
+{% endblock %}

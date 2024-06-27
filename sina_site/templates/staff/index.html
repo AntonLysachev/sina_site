@@ -1,13 +1,14 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block title %}{% translate 'Users' %}{% endblock %}
+{% block title %}{% translate 'Staff' %}{% endblock %}
 
 {% block content %}
 <div class="container wrapper flex-grow-1">      
     <h1 class="my-4">    
-        {% translate 'Users' %}
-    </h1> 
+        {% translate 'Staff' %}
+    </h1>
+    <button class="btn btn-primary"><a class="dropdown-item" href="{% url 'staff_create' %}">{% translate 'Add a employee' %}</a></button>
     <table class="table table-striped">
     <thead>
       <tr>
@@ -19,17 +20,17 @@
       </tr>
     </thead>
     <tbody>
-        {% if users %}
-        {% for user in users %}
+        {% if staff %}
+        {% for user in staff %}
         <tr>
           <td>{{ user.id }}</td>
           <td>{{ user.username }}</td>
           <td>{{ user.first_name }} {{user.last_name }}</td>
           <td>{{ user.date_joined|date:"d.m.Y H:i" }}</td>
           <td>
-            <a href="{% url 'user_update' pk=user.id %}">{% translate 'Update' %}</a>
+            <a href="{% url 'staff_update' pk=user.id %}">{% translate 'Update' %}</a>
             <br>
-            <a href="{% url 'user_delete' pk=user.id %}">{% translate 'Delete' %}</a>
+            <a href="{% url 'staff_delete' pk=user.id %}">{% translate 'Delete' %}</a>
           </td>
         </tr>
         {% endfor %}

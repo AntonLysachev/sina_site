@@ -14,38 +14,38 @@ from django.db.models.deletion import ProtectedError
 from django.contrib.auth.mixins import UserPassesTestMixin
 
 
-class UserChangePermissionMixin(UserPassesTestMixin):
+class StaffChangePermissionMixin(UserPassesTestMixin):
     model = User
     template_name = 'form.html'
-    success_url = reverse_lazy('users')
+    success_url = reverse_lazy('staff')
 
     def test_func(self):
         return self.get_object() == self.request.user or self.request.user.is_superuser
 
     def handle_no_permission(self):
         messages.error(self.request, _('You do not have permission to change another user'))
-        return redirect('users')
+        return redirect('staff')
 
 
-class UsersIndexView(LoginRequiredMixin, TemplateView):
+class StaffIndexView(LoginRequiredMixin, TemplateView):
 
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        users = User.objects.filter(is_active=True)
-        return render(request, 'users/index.html', context={'users': users})
+        staff = User.objects.filter(is_active=True)
+        return render(request, 'staff/index.html', context={'staff': staff})
 
 
-class UserCreateView(SuccessMessageMixin,
+class StaffCreateView(SuccessMessageMixin,
                      LoginRequiredMixin,
                      CreateView):
     model = User
     template_name = 'form.html'
     form_class = UserFormCreated
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy('staff')
     success_message = _("User successfully registered")
     extra_context = {'title': 'Sign up', 'button': 'Register'}
 
 
-class UserUpdateView(UserChangePermissionMixin,
+class StaffUpdateView(StaffChangePermissionMixin,
                      SuccessMessageMixin,
                      LoginRequiredMixin,
                      UpdateView):
@@ -54,7 +54,7 @@ class UserUpdateView(UserChangePermissionMixin,
     extra_context = {'title': 'Change user', 'button': 'Update'}
 
 
-class UserDeleteView(UserChangePermissionMixin,
+class StaffDeleteView(StaffChangePermissionMixin,
                      SuccessMessageMixin,
                      LoginRequiredMixin,
                      DeleteView):
@@ -77,5 +77,5 @@ class UserDeleteView(UserChangePermissionMixin,
             messages.success(request, _('User successfully deleted'))
         except ProtectedError:
             messages.error(request, _('Cannot delete user because they have associated tasks'))
-            return redirect('users')
+            return redirect('staff')
         return redirect(self.success_url)

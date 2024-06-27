@@ -14,7 +14,7 @@ PERIOD_CHOICES = (
 class PeriodFilterForm(Form):
     today = date.today()
     current_year = today.year
-    years = range(2000, current_year+1)
+    years = range(current_year+1, 2010)
 
     period = forms.ChoiceField(choices=PERIOD_CHOICES,
                                widget=forms.Select(attrs={'class': 'form-control'}), label='Период')

@@ -11,24 +11,15 @@
           {% if user.is_authenticated %}
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                {% translate 'Tasks' %}
+                {% translate 'Management' %}
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="/staff/">{% translate 'Staff list' %}</a></li>
                 <li><a class="dropdown-item" href="/tasks/">{% translate 'Task list' %}</a></li>
-                <li><a class="dropdown-item" href="/statuses/">{% translate 'Statuses list' %}</a></li>
-                <li><a class="dropdown-item" href="/labels/">{% translate 'Labels list' %}</a></li>
+                <li><a class="dropdown-item" href="/shift_schedule/">{% translate 'Schedules shifts' %}</a></li>
               </ul>
             </li>
             {% if user.is_superuser %}
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                {% translate 'Users' %}
-              </a>
-              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="/users/">{% translate 'Users list' %}</a></li>
-                <li><a class="dropdown-item" href="/users/create/">{% translate 'Registration of new users' %}</a></li>
-              </ul>
-            </li>
             <li class="nav-item">
               <a class="nav-link" href="/reviews/">{% translate 'Reviews' %}</a>
             </li>

@@ -1,14 +1,11 @@
 from django.db import models
+from django.contrib.auth.models import User
+from django.utils import timezone
 
 class Shift(models.Model):
-    name = models.CharField(max_length=200)
-    monday = models.CharField(max_length=200, blank=True)
-    tuesday = models.CharField(max_length=200, blank=True)
-    wednesday = models.CharField(max_length=200, blank=True)
-    thursday = models.CharField(max_length=200, blank=True)
-    friday = models.CharField(max_length=200, blank=True)
-    saturday = models.CharField(max_length=200, blank=True)
-    sunday = models.CharField(max_length=200, blank=True)
+    worker = models.ForeignKey(User, on_delete=models.SET_NULL, default=None, null=True)
+    date = models.DateField(default=timezone.now)
+    shift = models.IntegerField(default=0)
 
-    def __str__(self):
-        return self.name
+    class Meta:
+        unique_together = ('date', 'shift')

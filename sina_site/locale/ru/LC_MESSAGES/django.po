@@ -278,3 +278,45 @@ msgstr "Клиенты"
 
 msgid "Birthday"
 msgstr "День рождения"
+
+msgid "Shift"
+msgstr "Смена"
+
+msgid "Shifts"
+msgstr "Смены"
+
+msgid "Schedules shifts"
+msgstr "График смен"
+
+msgid "Add a shift schedule"
+msgstr "Добавить график смен"
+
+msgid "Schedule add successfully"
+msgstr  "Расписание добавлено успешно"
+
+msgid "Two workers cannot have one shift"
+msgstr "Два работника не могут работать в одну смену"
+
+msgid "Schedule update successful"
+msgstr "График обновлен успешно"
+
+msgid "Management"
+msgstr "Управление"
+
+msgid "Analytics"
+msgstr "Аналитика"
+
+msgid "Staff"
+msgstr "Персонал"
+
+msgid "Staff list"
+msgstr "Список сотрудников"
+
+msgid "Add a employee"
+msgstr "Добавить сотрудника"
+
+msgid "Period"
+msgstr "Период"
+
+msgid "A schedule with such a period already exists"
+msgstr "График с таким периодом уже существует"

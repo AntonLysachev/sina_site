@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class UsersConfig(AppConfig):
+class StaffConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "sina_site.users"
+    name = "sina_site.staff"
