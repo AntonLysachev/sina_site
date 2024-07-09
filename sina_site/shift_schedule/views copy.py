@@ -55,33 +55,71 @@ class ChuseWeekView(LoginRequiredMixin, TemplateView):
         return render(request, 'shift_schedule/chuse_week.html', context=context)
 
 
-class ShiftBaseView(LoginRequiredMixin, TemplateView):
-    title = ''
-    messages_success = ''
-    
-    def get_context(self, request: HttpRequest, formset=None, **kwargs):
-        slug = kwargs.get('slug')
-        week_start, _ = slug.split(' - ')
-        start_date = datetime.strptime(week_start, "%d-%m-%Y").date()
-        initialize = initialize_shift_formsets(start_date, request.POST if formset else None)
-        context = {
-            'slug': slug,
-            'title': self.title,
-            'management_form': initialize['management_form'],
-            'formsets': initialize['formsets'],
-            'formset': initialize['formset'],
-            'days_of_week': get_dates_of_week(start_date),
-        }
-        return context
-
+class ShiftScheduleCreateView(LoginRequiredMixin,TemplateView):
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        context = self.get_context(request, **kwargs)
+        slug = kwargs.get('slug')
+        week_start, week_end = slug.split(' - ')
+        start_date = datetime.strptime(week_start, "%d-%m-%Y").date()
+        initialize = initialize_shift_formsets(start_date)
+
+        context = {}
+        context['slug'] = slug
+        context['title'] = _("Create")
+        context['management_form'] = initialize['management_form']
+        context['formsets'] = initialize['formsets']
+        context['days_of_week'] = get_dates_of_week(start_date)
         return render(request, 'shift_schedule/form.html', context=context)
-    
+
     def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
-        context = self.get_context(request, formset=True, **kwargs)
-        formset = context['formset']
+        slug = kwargs.get('slug')
+        week_start, week_end = slug.split(' - ')
+        start_date = datetime.strptime(week_start, "%d-%m-%Y").date()
+        initialize = initialize_shift_formsets(start_date, request.POST)
+        formset = initialize['formset']
         
+        if formset.is_valid():
+            for form in formset.cleaned_data:
+                worker = form['worker']
+                date = form['date']
+
+                if form['shift_1']:
+                    Shift.objects.create(worker=worker, date=date, shift=1)
+                if form['shift_2']:
+                    Shift.objects.create(worker=worker, date=date, shift=2)
+
+            messages.success(request, _('Schedule add successfully'))
+            return redirect(reverse_lazy('shift_schedule'))
+
+        context = {} 
+        context['slug'] = slug
+        context['management_form'] = initialize['management_form']
+        context['formsets'] = initialize['formsets']
+        context['days_of_week'] = get_dates_of_week(start_date)
+        return render(request, 'shift_schedule/form.html', context=context)
+
+
+class ShiftScheduleUpdateView(LoginRequiredMixin, TemplateView):
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        slug = kwargs.get('slug')
+        week_start, week_end = slug.split(' - ')
+        start_date = datetime.strptime(week_start, "%d-%m-%Y").date()
+        initialize = initialize_shift_formsets(start_date)
+
+        context = {}
+        context['slug'] = slug
+        context['title'] = _('Update')
+        context['management_form'] = initialize['management_form']
+        context['formsets'] = initialize['formsets']
+        context['days_of_week'] = get_dates_of_week(start_date)
+        return render(request, 'shift_schedule/form.html', context=context)
+
+    def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+        slug = kwargs.get('slug')
+        week_start, week_end = slug.split(' - ')
+        start_date = datetime.strptime(week_start, "%d-%m-%Y").date()
+        initialize = initialize_shift_formsets(start_date, request.POST)
+        formset = initialize['formset']
+
         if formset.is_valid():
             for form in formset.cleaned_data:
                 worker = form['worker']
@@ -100,17 +138,12 @@ class ShiftBaseView(LoginRequiredMixin, TemplateView):
                 if not form['state_2'] and form['shift_2']:
                     Shift.objects.create(worker=worker, date=date, shift=2)
 
-            messages.success(request, self.messages_success )
+            messages.success(request, _('Schedule update successful'))
             return redirect(reverse_lazy('shift_schedule'))
-        
+
+        context = {} 
+        context['slug'] = slug
+        context['management_form'] = initialize['management_form']
+        context['formsets'] = initialize['formsets']
+        context['days_of_week'] = get_dates_of_week(start_date)
         return render(request, 'shift_schedule/form.html', context=context)
-
-
-class ShiftScheduleCreateView(ShiftBaseView):
-    title = _('Create')
-    messages_success = _('Schedule add successfully')
-
-
-class ShiftScheduleUpdateView(ShiftBaseView):
-    title = _('Update')
-    messages_success = _('Schedule update successful')

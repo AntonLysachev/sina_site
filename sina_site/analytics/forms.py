@@ -1,22 +1,20 @@
-from django.forms import Form
 from django import forms
-import calendar
-from datetime import date, timedelta
+from datetime import date
 
-MONTH_CHOICES = tuple((str(i), month) for i, month in enumerate(calendar.month_name) if month)
 
 PERIOD_CHOICES = (
-    ('week', 'Неделя'),
-    ('month', 'Месяц'),
-    ('year', 'Год'),
+    ('weeks', 'Неделя'),
+    ('months', 'Месяц'),
+    ('years', 'Год'),
 )
 
-class PeriodFilterForm(Form):
+
+class PeriodFilterForm(forms.Form):
     today = date.today()
     current_year = today.year
-    years = range(current_year+1, 2010)
+    years = range(2010, current_year+1)
 
     period = forms.ChoiceField(choices=PERIOD_CHOICES,
-                               widget=forms.Select(attrs={'class': 'form-control'}), label='Период')
-    date_from = forms.DateField(widget=forms.SelectDateWidget(years=years, attrs={'class': 'form-control'}), label='С')
-    date_to = forms.DateField(widget=forms.SelectDateWidget(years=years, attrs={'class': 'form-control'}), label='По')
+                               widget=forms.Select(attrs={'class': "form-select"}), label='Период')
+    date_from = forms.DateField(widget=forms.SelectDateWidget(years=years, attrs={'class': "form-select"}), label='С', initial='2010-01-01')
+    date_to = forms.DateField(widget=forms.SelectDateWidget(years=years, attrs={'class': "form-select"}), label='По', initial=today)

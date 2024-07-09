@@ -320,3 +320,15 @@ msgstr "Период"
 
 msgid "A schedule with such a period already exists"
 msgstr "График с таким периодом уже существует"
+
+msgid "Schedule deleted"
+msgstr "Расписание удалено"
+
+msgid "year"
+msgstr "год"
+
+msgid "There cannot be two or more identical shifts"
+msgstr "Не может быть двух и более одинаковых смен"
+
+msgid "Are you sure you want to delete this schedule?"
+msgstr "Вы уверены, что хотите удалить это расписание?"

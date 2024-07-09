@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load i18n django_bootstrap5 %}
+
+{% block title %}{% translate 'Schedule create' %}{% endblock %}
+
+{% block content %}
+<div style="width: 50%; margin: 0 auto">
+  <h1 style="color: dodgerblue;">{{ year }} {% translate 'year' %}</h1>
+  <table>
+      <tbody>
+          {% for group in weeks %}
+          <tr>
+              {% for week in group %}
+              <td>
+                  <form method="get" action="{% url 'chuse_week' %}">
+                      {% csrf_token %}
+                      <button value="on" name="{{ week.0 }}" type="submit" class="btn btn-primary" style="background-color: {{ week.1|yesno:'dodgerblue,burlywood,#084298' }};">
+                          {{ week.0 }} 
+                      </button>
+                  </form>
+              </td>
+              {% endfor %}
+          </tr>
+          {% endfor %}
+      </tbody>
+  </table>
+</div>
+{% endblock %}

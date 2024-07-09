@@ -1,12 +1,13 @@
-from datetime import timedelta
+from datetime import timedelta, date
+from django.forms import formset_factory
 from .models import Shift
-from .forms import ShiftForm
+from .forms import ShiftForm, BaseShiftDayFormset
 from django.utils.translation import gettext as _
 from django.contrib.auth.models import User
-from django.db import IntegrityError
 from django.db.models.query import QuerySet
 import calendar
 import copy
+import datetime
 
 
 def week_as_str(shift: Shift) -> str:
@@ -14,7 +15,7 @@ def week_as_str(shift: Shift) -> str:
     day = date.weekday()
     week_start = date - timedelta(days=day)
     week_end = week_start + timedelta(days=6)
-    return f'{week_start} - {week_end}'
+    return f'{week_start.strftime("%d-%m-%Y")} - {week_end.strftime("%d-%m-%Y")}'
 
 
 def group_weeks_from_shifts(shifts: QuerySet) -> dict:
@@ -45,96 +46,67 @@ def group_weeks(shifts: QuerySet) -> dict:
     return weekly_shifts
 
 
-def group_shifts(shifts: QuerySet) -> dict:
-    weekly_shifts  = group_weeks(shifts)
-    for shift in shifts:
-        worker = f'{shift.worker.first_name} {shift.worker.last_name}'
-        type_shift = shift.shift
-        date = shift.date
-        day = date.weekday()
-        week = week_as_str(shift)
-        weekly_shifts[week][worker]['days'][day].append(type_shift)
+def group_shifts() -> dict:
+    shifts = Shift.objects.all().order_by('-date')
+    if shifts:
+        weekly_shifts  = group_weeks(shifts)
+        for shift in shifts:
+            worker = f'{shift.worker.first_name} {shift.worker.last_name}'
+            type_shift = shift.shift
+            date = shift.date
+            day = date.weekday()
+            week = week_as_str(shift)
+            weekly_shifts[week][worker]['days'][day].append(type_shift)
+    else:
+        weekly_shifts = {}
     return weekly_shifts
 
 
-def group_forms_for_week(users: User) -> dict:
-    forms = {}
-    for user in users:
-        id = user.id
-        name = f'{user.first_name} {user.last_name}'
-        forms[name] = []
-        for i in range(0, 7):
-            form = ShiftForm(choices=[(f'{id}.{i}.1', f"{_('Shift')} 1"), (f'{id}.{i}.2', f"{_('Shift')} 2")])
-            forms[name].append(form)
-    return forms
+def get_weeks_for_year(year):
+    weeks =  []
+    start_date = datetime.date(year, 1, 1)
+    end_date = datetime.date(year, 12, 31)
+    today = date.today()
+    current_date = start_date
+    while current_date <= end_date:
+        week_start = current_date - timedelta(days=current_date.weekday())
+        week_end = week_start + timedelta(days=6)
+        color = week_end > today
+        if week_start <= today and week_end >= today:
+            color = None
+        weeks.append((f"{week_start.strftime('%d-%m-%Y')} - {week_end.strftime('%d-%m-%Y')}", color))
+        current_date += timedelta(days=7)
+
+    return weeks
 
 
-def group_for_update(group: dict) -> dict:
-    forms = {}
-    for week, worker in group.items():
-        for name, meta in worker.items():
-            forms[name]= []
-            id = meta['user_id']
-            for day, shifts in meta['days'].items():
-                selected = []
-                for shift in shifts:
-                    selected.append(f'{id}.{day}.{shift}')
-                form = ShiftForm(choices=[(f'{id}.{day}.1', f"{_('Shift')} 1"), (f'{id}.{day}.2', f"{_('Shift')} 2")], selected=selected)
-                forms[name].append(form)
-    return forms
+def get_dates_of_week(week_start: date):
+    dates = []
+    days = tuple((i, day) for i, day in enumerate(calendar.day_name))
+    for number, day in days:
+        dates.append((day, week_start+timedelta(days=number)))
+    return dates
 
+def initialize_shift_formsets(start_date: datetime, request=None) -> dict:
 
-def add_shifts(shifts, date_from):
-    day_of_week = date_from.weekday()
-    start_of_week = date_from - timedelta(days=day_of_week)
+    workers = User.objects.filter(is_active=True)
+    dates = [start_date + timedelta(days=i) for i in range(7)]
+    initial = []
+    for worker in workers:
+        for date in dates:
+            shifts = Shift.objects.filter(date=date, worker=worker)
+            shift_1 = shifts.filter(shift=1).exists()
+            shift_2 = shifts.filter(shift=2).exists()
+            initial.append({"worker": worker,
+                            "date": date,
+                            'shift_1': shift_1,
+                            'shift_2': shift_2,
+                            'state_1': shift_1,
+                            'state_2': shift_2})
 
-    for shift in shifts:
-        client_id, day, type = map(int, shift.split('.'))
-        worker = User.objects.get(id=client_id)
-        date = start_of_week + timedelta(days=day)
-        try:
-            Shift.objects.create(date=date, shift=type, worker=worker)
-        except IntegrityError as e:
-            raise e
+    ShiftDayFormset = formset_factory(ShiftForm, extra=0, formset=BaseShiftDayFormset)
+    formset = ShiftDayFormset(request, initial=initial)
+    formsets = [formset[i:i+7] for i in range(0, len(formset), 7)]
+    management_form = formset.management_form
 
-
-def update_shifts(shifts, date_from):
-    day_of_week = date_from.weekday()
-    start_of_week = date_from - timedelta(days=day_of_week)
-    end_of_week = start_of_week + timedelta(days=6)
-    existing_shifts = Shift.objects.filter(date__range=[start_of_week, end_of_week])
-    for_comparison = []
-
-    for shift in shifts:
-        client_id, day, type = map(int, shift.split('.'))
-        worker = User.objects.get(id=client_id)
-        date = start_of_week + timedelta(days=day)
-        is_exists = Shift.objects.filter(date=date, shift=type, worker=worker)
-        if is_exists.exists():
-            shift_id = is_exists.first().id
-            for_comparison.append(shift_id)
-        else:
-            try:
-                shift = Shift.objects.create(date=date, shift=type, worker=worker)
-                for_comparison.append(shift.id)
-            except IntegrityError as e:
-                if "(date, shift)" in str(e):
-                    shift = Shift.objects.get(date=date, shift=type)
-                    id = shift.id
-                    shift.worker = worker
-                    shift.save()
-                    for_comparison.append(id)
-
-    shifts_to_delete = existing_shifts.exclude(id__in=for_comparison)
-    for shift in shifts_to_delete:
-        shift.delete()
-
-
-def validation_shifts(shifts):
-    valid_shifts = []
-    for shift in shifts:
-        meta = shift[2:]
-        if meta in valid_shifts:
-            return False
-        valid_shifts.append(meta)
-    return True
+    return {'formset': formset, 'formsets': formsets, 'management_form': management_form}

@@ -117,11 +117,9 @@
             <div class="col-auto">
                 <input name="Get" class="btn btn-primary" type="submit" value="Получить">
             </div>
-            <div class="col-auto">
-            </div>
         </div>
     </form>
-    <form action="{% url 'analytics' %}" method="post">
+    <form action="{% url 'analytics' %}" method="post" style="margin-top: 10px;">
         {% csrf_token %}
         <input name="Update" class="btn btn-primary" type="submit" value="Обновить">
     </form>

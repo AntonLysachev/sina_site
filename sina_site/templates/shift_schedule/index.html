@@ -1,18 +1,41 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n django_bootstrap5 %}
 
 {% block title %}{% translate 'Schedules shifts' %}{% endblock %}
 
 {% block content %}
-<div class="container wrapper">      
+<div class="container wrapper">
   <h1 class="my-4">    
       {% translate 'Schedules shifts' %} 
   </h1> 
-  <button class="btn btn-primary"><a class="dropdown-item" href="{% url 'shift_create' %}">{% translate 'Add a shift schedule' %}</a></button>
+  <div>
+    <form action="{% url 'chuse_week' %}" method="get">
+    <table>
+      <tr>
+        <th>
+          <input class="btn btn-primary" type="submit" value="{% translate 'Add a shift schedule' %}">
+      </th>
+      <th>
+      {{ year_form.select_year }}
+    </th>
+    </tr>
+    </table>
+  </form>
+</div>
   {% if groups %}
   {% for period, workers in groups.items %}
-  <div style="margin-top: 10px;">
-    {% translate 'Period' %} <a href="{% url 'shift_update' slug=period %}">{{ period }}</a>
+  <div style="display: flex; justify-content:space-between;">
+    <div style="margin-top: 10px;">
+        <h4 style="color: dodgerblue;">{% translate 'Period' %} {{ period }}</h4>
+    </div>
+    <div style="display: flex; gap: 10px; align-items: center;">
+        <a class="btn btn-primary" href="{% url 'shift_update' slug=period %}">{% translate 'Update' %}</a>
+        <form method="post" onsubmit="return confirm('{% translate "Are you sure you want to delete this schedule?" %}');">
+        {% csrf_token %}
+        <input type="hidden" name="period" value="{{ period }}">
+        <button type="submit" class="btn btn-danger">{% translate 'Delete' %}</button>
+        </form>
+    </div>
   </div>
   <table class="table table-bordered " style="white-space: nowrap;">
     <thead>

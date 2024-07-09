@@ -125,6 +125,38 @@ class Analytics():
         common_date = start_date + delta
         end_date = common_date + delta
         return start_date, common_date, end_date
+    
+    def calculate_returning_clients_stats(self,transactions: Transaction, **sample_per ):
+        delta = relativedelta(**sample_per)
+        all_transactions = pd.DataFrame.from_records(transactions)
+        registered_clients = all_transactions.loc[all_transactions['client_id'] != 0]
+        start_date, common_date, end_date = self.calculate_date_range(registered_clients, delta, **sample_per)
+
+        while self.date_to > (end_date - delta):
+            before_period = registered_clients.loc[registered_clients['date_close'].between(start_date, common_date)]
+            cleane_before_period = before_period.drop_duplicates(subset='client_id')
+
+            period = registered_clients.loc[registered_clients['date_close'].between(common_date, end_date)]
+            clean_period = period.drop_duplicates(subset='client_id')
+            transactions_period = len(all_transactions.loc[all_transactions['date_close'].between(common_date, end_date)])
+
+            returned = len(pd.merge(cleane_before_period, clean_period, on='client_id'))
+            one_hundred_percent = len(cleane_before_period)
+            if returned == 0:
+                returnability = 0
+            else:
+                returnability = round((returned / one_hundred_percent) * 100, 2)
+
+            self.returning_clients_stats.append({
+                'percent': returnability,
+                'transactions': transactions_period,
+                'date_from': common_date.date(),
+                'date_to': end_date.date(),
+            })
+
+            start_date += delta
+            common_date += delta
+            end_date += delta
 
     def get_returnability(self, date_from: datetime = None, date_to: datetime = None, **sample_per):
 
@@ -132,38 +164,9 @@ class Analytics():
             self.date_from = pd.to_datetime(date_from, utc=True)
         if date_to:
             self.date_to = pd.to_datetime(date_to, utc=True)
-        delta = relativedelta(**sample_per)
 
         transactions = Transaction.objects.filter(date_close__range=(self.date_from, self.date_to)).values()
         if transactions:
-            all_transactions = pd.DataFrame.from_records(transactions)
-            registered_clients = all_transactions.loc[all_transactions['client_id'] != 0]
-            start_date, common_date, end_date = self.calculate_date_range(registered_clients, delta, **sample_per)
-
-            while self.date_to > (end_date - delta):
-                before_period = registered_clients.loc[registered_clients['date_close'].between(start_date, common_date)]
-                cleane_before_period = before_period.drop_duplicates(subset='client_id')
-
-                period = registered_clients.loc[registered_clients['date_close'].between(common_date, end_date)]
-                clean_period = period.drop_duplicates(subset='client_id')
-                transactions_period = len(all_transactions.loc[all_transactions['date_close'].between(common_date, end_date)])
-
-                returned = len(pd.merge(cleane_before_period, clean_period, on='client_id'))
-                one_hundred_percent = len(cleane_before_period)
-                if returned == 0:
-                    returnability = 0
-                else:
-                    returnability = round((returned / one_hundred_percent) * 100, 2)
-
-                self.returning_clients_stats.append({
-                    'percent': returnability,
-                    'transactions': transactions_period,
-                    'date_from': common_date.date(),
-                    'date_to': end_date.date(),
-                })
-
-                start_date += delta
-                common_date += delta
-                end_date += delta
+            self.calculate_returning_clients_stats(transactions, **sample_per)
 
         return self.returning_clients_stats

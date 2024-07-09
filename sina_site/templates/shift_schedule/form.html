@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load i18n django_bootstrap5 %}
+
+{% block title %}{% translate 'Schedule create' %}{% endblock %}
+
+{% block content %}
+<div style="margin-left: 10px; margin-right: 10px;">
+<h1>{{ title }}: {{ slug }}</h1>
+<form method="post">
+  {% csrf_token %}
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th scope="col">{% translate 'Name' %}</th>
+        {% for day, date in days_of_week %}
+        <th scope="col">{% translate day %}: {{ date }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {{ management_form }}
+      <tr>
+        {% for formset in formsets %}
+        <th>{{ formset.0.worker.initial.first_name }} {{ formset.0.worker.initial.last_name }}</th>
+        {% for form in formset %}
+          <td>
+            {{ form.shift_1.label_tag }}
+            {{ form.shift_1 }}
+            {{ form.shift_2.label_tag }}
+            {{ form.shift_2 }}
+            {% if form.errors %}
+            <ul class="errorlist">
+                {% for field_errors in form.errors.values %}
+                    {% for error in field_errors %}
+                        <li style="color: red;">{{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+            {% endif %}
+            <div style="display: none;">
+              {{ form.worker }}
+              {{ form.date }}
+              {{ form.state_1 }}
+              {{ form.state_2 }}
+          </div>
+          </td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <input name="Save" class="btn btn-primary" type="submit" value="Сохранить" style="margin-top: 20px; margin-left: 10px;">
+</form>
+</div>
+{% endblock %}
