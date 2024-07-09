@@ -40,11 +40,11 @@ class ShiftForm(forms.Form):
     shift_1 = forms.Field(
         widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         required=False,
-        label=f'{_('Shift')} 1')
+        label=f'{_("Shift")} 1')
     shift_2 = forms.Field(
         widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         required=False,
-        label=f'{_('Shift')} 2')
+        label=f'{_("Shift")} 2')
 
     
 class BaseShiftDayFormset(BaseFormSet):
