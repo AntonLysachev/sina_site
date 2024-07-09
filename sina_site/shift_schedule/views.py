@@ -21,8 +21,8 @@ class ShiftScheduleIndexView(LoginRequiredMixin, TemplateView):
         year_form = YearForm
         return render(request, 'shift_schedule/index.html', context={'groups': groups,
                                                                      'year_form': year_form,
-                                                                     'days_of_week': days_of_week,})
-    
+                                                                     'days_of_week': days_of_week})
+
     def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         period = request.POST.get('period')
         week_start, week_end = period.split(' - ')
@@ -50,7 +50,7 @@ class ChuseWeekView(LoginRequiredMixin, TemplateView):
         year = int(request.GET.get('select_year'))
         weeks = get_weeks_for_year(year)
         context = {}
-        context['weeks'] = [weeks[i:i+8] for i in range(0, len(weeks), 8)]
+        context['weeks'] = [weeks[i:i + 8] for i in range(0, len(weeks), 8)]
         context['year'] = year
         return render(request, 'shift_schedule/chuse_week.html', context=context)
 
@@ -58,7 +58,7 @@ class ChuseWeekView(LoginRequiredMixin, TemplateView):
 class ShiftBaseView(LoginRequiredMixin, TemplateView):
     title = ''
     messages_success = ''
-    
+
     def get_context(self, request: HttpRequest, formset=None, **kwargs):
         slug = kwargs.get('slug')
         week_start, _ = slug.split(' - ')
@@ -77,11 +77,11 @@ class ShiftBaseView(LoginRequiredMixin, TemplateView):
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         context = self.get_context(request, **kwargs)
         return render(request, 'shift_schedule/form.html', context=context)
-    
+
     def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
         context = self.get_context(request, formset=True, **kwargs)
         formset = context['formset']
-        
+
         if formset.is_valid():
             for form in formset.cleaned_data:
                 worker = form['worker']
@@ -100,9 +100,9 @@ class ShiftBaseView(LoginRequiredMixin, TemplateView):
                 if not form['state_2'] and form['shift_2']:
                     Shift.objects.create(worker=worker, date=date, shift=2)
 
-            messages.success(request, self.messages_success )
+            messages.success(request, self.messages_success)
             return redirect(reverse_lazy('shift_schedule'))
-        
+
         return render(request, 'shift_schedule/form.html', context=context)
 
 

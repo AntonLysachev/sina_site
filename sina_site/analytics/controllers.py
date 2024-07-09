@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 import requests
 from django.utils import timezone
 from dateutil.relativedelta import relativedelta
-from datetime import datetime, timedelta
+from datetime import datetime
 from .models import Transaction, Product
 from sina_site.customers.models import Customer
 import pandas as pd
@@ -14,6 +14,7 @@ load_dotenv()
 POSTER_TOKEN = os.getenv('POSTER_TOKEN')
 POSTER_URL = os.getenv('POSTER_URL')
 
+
 class API():
 
     def __init__(self, token=POSTER_TOKEN, base_url=POSTER_URL) -> None:
@@ -22,15 +23,15 @@ class API():
 
     def get_url(self, rpc_method) -> str:
         return f'{self._base_url}{rpc_method}?token={self._token}'
-    
+
     def get_json_request(self, rpc_method: str, quantity='one', **kwargs) -> dict:
-            with requests.get(self.get_url(rpc_method), params=kwargs) as response:
-                json_response = response.json()
-                if json_response['response']:
-                    if quantity == 'one':
-                        return json_response['response'][0]
-                    if quantity == 'many':
-                        return json_response['response']
+        with requests.get(self.get_url(rpc_method), params=kwargs) as response:
+            json_response = response.json()
+            if json_response['response']:
+                if quantity == 'one':
+                    return json_response['response'][0]
+                if quantity == 'many':
+                    return json_response['response']
 
     def get_transactions(self, data_from: str, date_to: str, per_page: int = 1000):
         count = per_page
@@ -59,7 +60,7 @@ class Pump():
         if Transaction.objects.exists():
             last_date_close = Transaction.objects.latest('date_close').date_close
         else:
-            last_date_close = None 
+            last_date_close = None
         all_data = []
         api = API()
 
@@ -74,12 +75,12 @@ class Pump():
 
     def synchronization_db(self):
 
-         transactions = self.pull_transaction()
+        transactions = self.pull_transaction()
 
-         for transaction in transactions:
+        for transaction in transactions:
 
             products = transaction['products']
-            
+
             transaction_id = transaction['transaction_id']
             client_id = transaction['client_id']
             date_close_naive = datetime.strptime(transaction['date_close'], "%Y-%m-%d %H:%M:%S")
@@ -89,14 +90,20 @@ class Pump():
             else:
                 customer_id = None
             try:
-                transaction = Transaction.objects.create(transaction_id=transaction_id, client_id=client_id, date_close=date_close, customer_id=customer_id)
+                transaction = Transaction.objects.create(transaction_id=transaction_id,
+                                                         client_id=client_id,
+                                                         date_close=date_close,
+                                                         customer_id=customer_id)
                 for product in products:
                     product_id = product['product_id']
                     type = product['type']
                     product_sum = product['product_sum']
                     payed_sum = product['payed_sum']
                     try:
-                        product_obj = Product.objects.create(product_id=product_id, type=type, product_sum=product_sum, payed_sum=payed_sum)
+                        product_obj = Product.objects.create(product_id=product_id,
+                                                             type=type,
+                                                             product_sum=product_sum,
+                                                             payed_sum=payed_sum)
 
                     except:
                         product_obj = Product.objects.get(product_id=product_id)
@@ -113,7 +120,7 @@ class Analytics():
         self.date_from = pd.to_datetime('1677-09-22', utc=True)
         self.date_to = pd.to_datetime(datetime.now(), utc=True)
         self.returning_clients_stats = []
-    
+
     def calculate_date_range(self, dataframe: DataFrame, delta: relativedelta, **sample_per) -> tuple:
             
         start_date = dataframe['date_close'].min().to_period('W').to_timestamp().replace(hour=7, minute=30)
@@ -125,7 +132,7 @@ class Analytics():
         common_date = start_date + delta
         end_date = common_date + delta
         return start_date, common_date, end_date
-    
+
     def calculate_returning_clients_stats(self,transactions: Transaction, **sample_per ):
         delta = relativedelta(**sample_per)
         all_transactions = pd.DataFrame.from_records(transactions)

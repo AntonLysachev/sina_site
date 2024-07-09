@@ -1,4 +1,3 @@
-from typing import Any
 from django.forms import BaseFormSet, Form
 from django.utils.translation import gettext_lazy as _
 from django import forms
@@ -11,9 +10,8 @@ class YearForm(Form):
     years = [(year, year) for year in range(2000, 2100)]
     select_year = forms.CharField(
         widget=forms.Select(choices=years, attrs={'class': "form-select"}),
-        label = _('year'),
-        initial= current_year
-    )
+        label=_('year'),
+        initial=current_year)
 
 
 class ShiftDateFromForm(Form):
@@ -27,7 +25,8 @@ class ShiftDateFromForm(Form):
         label='Преиод',
         initial=today)
 
-#TODO поменять селект worker на строчку
+
+# TODO поменять селект worker на строчку
 class ShiftForm(forms.Form):
     state_1 = forms.Field(
         widget=forms.CheckboxInput()
@@ -46,7 +45,7 @@ class ShiftForm(forms.Form):
         required=False,
         label=f'{_("Shift")} 2')
 
-    
+
 class BaseShiftDayFormset(BaseFormSet):
     def clean(self) -> None:
         if any(self.errors):

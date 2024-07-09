@@ -2,7 +2,6 @@ from datetime import timedelta, date
 from django.forms import formset_factory
 from .models import Shift
 from .forms import ShiftForm, BaseShiftDayFormset
-from django.utils.translation import gettext as _
 from django.contrib.auth.models import User
 from django.db.models.query import QuerySet
 import calendar
@@ -49,7 +48,7 @@ def group_weeks(shifts: QuerySet) -> dict:
 def group_shifts() -> dict:
     shifts = Shift.objects.all().order_by('-date')
     if shifts:
-        weekly_shifts  = group_weeks(shifts)
+        weekly_shifts = group_weeks(shifts)
         for shift in shifts:
             worker = f'{shift.worker.first_name} {shift.worker.last_name}'
             type_shift = shift.shift
@@ -63,7 +62,7 @@ def group_shifts() -> dict:
 
 
 def get_weeks_for_year(year):
-    weeks =  []
+    weeks = []
     start_date = datetime.date(year, 1, 1)
     end_date = datetime.date(year, 12, 31)
     today = date.today()
@@ -84,8 +83,9 @@ def get_dates_of_week(week_start: date):
     dates = []
     days = tuple((i, day) for i, day in enumerate(calendar.day_name))
     for number, day in days:
-        dates.append((day, week_start+timedelta(days=number)))
+        dates.append((day, week_start + timedelta(days=number)))
     return dates
+
 
 def initialize_shift_formsets(start_date: datetime, request=None) -> dict:
 
@@ -106,7 +106,7 @@ def initialize_shift_formsets(start_date: datetime, request=None) -> dict:
 
     ShiftDayFormset = formset_factory(ShiftForm, extra=0, formset=BaseShiftDayFormset)
     formset = ShiftDayFormset(request, initial=initial)
-    formsets = [formset[i:i+7] for i in range(0, len(formset), 7)]
+    formsets = [formset[i:i + 7] for i in range(0, len(formset), 7)]
     management_form = formset.management_form
 
     return {'formset': formset, 'formsets': formsets, 'management_form': management_form}

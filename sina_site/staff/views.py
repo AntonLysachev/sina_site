@@ -35,8 +35,8 @@ class StaffIndexView(LoginRequiredMixin, TemplateView):
 
 
 class StaffCreateView(SuccessMessageMixin,
-                     LoginRequiredMixin,
-                     CreateView):
+                      LoginRequiredMixin,
+                      CreateView):
     model = User
     template_name = 'form.html'
     form_class = UserFormCreated
@@ -46,18 +46,18 @@ class StaffCreateView(SuccessMessageMixin,
 
 
 class StaffUpdateView(StaffChangePermissionMixin,
-                     SuccessMessageMixin,
-                     LoginRequiredMixin,
-                     UpdateView):
+                      SuccessMessageMixin,
+                      LoginRequiredMixin,
+                      UpdateView):
     form_class = UserFormCreated
     success_message = _("User successfully changed")
     extra_context = {'title': 'Change user', 'button': 'Update'}
 
 
 class StaffDeleteView(StaffChangePermissionMixin,
-                     SuccessMessageMixin,
-                     LoginRequiredMixin,
-                     DeleteView):
+                      SuccessMessageMixin,
+                      LoginRequiredMixin,
+                      DeleteView):
 
     extra_context = {'title': 'Deleting a user',
                      'button': 'Yes, delete',

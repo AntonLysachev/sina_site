@@ -5,8 +5,6 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 from sina_site.analytics.controllers import Pump, Analytics
 from sina_site.analytics.forms import PeriodFilterForm
-from datetime import date, timedelta
-
 
 
 class AnalyticsIndexView(TemplateView):
